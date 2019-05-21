@@ -105,6 +105,8 @@ public:
 
 	//pulse
 	bool decrease = false;
+
+	void GenerateBackground(triangle* myTriangles);
 	
 	DEMO_APP(HINSTANCE hinst, WNDPROC proc);
 	bool Run();
@@ -219,36 +221,7 @@ DEMO_APP::DEMO_APP(HINSTANCE hinst, WNDPROC proc)
 		tBuffer.MiscFlags = NULL; 
 		
 		triangle triangleVerts[400];
-		float sqOffsetX = 0, sqOffsetY = 0;
-		unsigned int triNum = 0;
-
-		for (unsigned int j = 0; j < 20; j++)
-		{
-			for (unsigned int i = 0; i < 10; i++)
-			{
-					triangleVerts[0 + triNum].point1.x = -1.0f + sqOffsetX;
-					triangleVerts[0 + triNum].point1.y =  0.9f + sqOffsetY;
-					triangleVerts[0 + triNum].point2.x = -1.0f + sqOffsetX;
-					triangleVerts[0 + triNum].point2.y =  1.0f + sqOffsetY;
-					triangleVerts[0 + triNum].point3.x = -0.9f + sqOffsetX;
-					triangleVerts[0 + triNum].point3.y =  1.0f + sqOffsetY;
-					triangleVerts[1 + triNum].point1.x = -1.0f + sqOffsetX;
-					triangleVerts[1 + triNum].point1.y =  0.9f + sqOffsetY;
-					triangleVerts[1 + triNum].point2.x = -0.9f + sqOffsetX;
-					triangleVerts[1 + triNum].point2.y =  1.0f + sqOffsetY;
-					triangleVerts[1 + triNum].point3.x = -0.9f + sqOffsetX;
-					triangleVerts[1 + triNum].point3.y =  0.9f + sqOffsetY;
-					triNum += 2;
-					sqOffsetX += 0.2f;
-			}
-
-			if ((j + 1) % 2)
-				sqOffsetX = 0.1f;
-			else
-				sqOffsetX = 0;
-
-			sqOffsetY -= 0.1f;
-		}
+		GenerateBackground(triangleVerts);
 
 		D3D11_SUBRESOURCE_DATA trData = { 0 };
 		trData.pSysMem = triangleVerts;
@@ -452,3 +425,38 @@ LRESULT CALLBACK WndProc( HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam 
     return DefWindowProc( hWnd, message, wParam, lParam );
 }
 //********************* END WARNING ************************//
+
+//Generates the vertices for the squared seen in the background changing color
+void DEMO_APP::GenerateBackground(triangle* myTriangles)
+{
+	float sqOffsetX = 0, sqOffsetY = 0;
+	unsigned int triNum = 0;
+
+	for (unsigned int j = 0; j < 20; j++)
+	{
+		for (unsigned int i = 0; i < 10; i++)
+		{
+			myTriangles[0 + triNum].point1.x = -1.0f + sqOffsetX;
+			myTriangles[0 + triNum].point1.y = 0.9f + sqOffsetY;
+			myTriangles[0 + triNum].point2.x = -1.0f + sqOffsetX;
+			myTriangles[0 + triNum].point2.y = 1.0f + sqOffsetY;
+			myTriangles[0 + triNum].point3.x = -0.9f + sqOffsetX;
+			myTriangles[0 + triNum].point3.y = 1.0f + sqOffsetY;
+			myTriangles[1 + triNum].point1.x = -1.0f + sqOffsetX;
+			myTriangles[1 + triNum].point1.y = 0.9f + sqOffsetY;
+			myTriangles[1 + triNum].point2.x = -0.9f + sqOffsetX;
+			myTriangles[1 + triNum].point2.y = 1.0f + sqOffsetY;
+			myTriangles[1 + triNum].point3.x = -0.9f + sqOffsetX;
+			myTriangles[1 + triNum].point3.y = 0.9f + sqOffsetY;
+			triNum += 2;
+			sqOffsetX += 0.2f;
+		}
+
+		if ((j + 1) % 2)
+			sqOffsetX = 0.1f;
+		else
+			sqOffsetX = 0;
+
+		sqOffsetY -= 0.1f;
+	}
+}
