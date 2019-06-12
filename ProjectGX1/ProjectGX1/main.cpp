@@ -111,6 +111,9 @@ public:
 	DEMO_APP(HINSTANCE hinst, WNDPROC proc);
 	bool Run();
 	bool ShutDown();
+
+	//Helper methods
+	void DxSwapChainConfig(DXGI_SWAP_CHAIN_DESC &swapChainDesc);
 };
 
 //************************************************************
@@ -145,23 +148,7 @@ DEMO_APP::DEMO_APP(HINSTANCE hinst, WNDPROC proc)
     ShowWindow( window, SW_SHOW );
 	//********************* END WARNING ************************//
 
-	ZeroMemory(&dxSwapChainDesc, sizeof(dxSwapChainDesc));
-	dxSwapChainDesc.BufferCount = 1;
-
-	dxSwapChainDesc.BufferDesc.Width = BACKBUFFER_WIDTH;
-	dxSwapChainDesc.BufferDesc.Height = BACKBUFFER_HEIGHT;
-	dxSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-	dxSwapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
-	dxSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
-	dxSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-	dxSwapChainDesc.OutputWindow = window;
-	dxSwapChainDesc.SampleDesc.Count = 1;
-	dxSwapChainDesc.SampleDesc.Quality = 0;
-	dxSwapChainDesc.Windowed = true;
-	dxSwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
-	dxSwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
-	dxSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
-	dxSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+	DxSwapChainConfig(dxSwapChainDesc);
 
 	UINT flag = 0;
 #if _DEBUG
@@ -459,4 +446,27 @@ void DEMO_APP::GenerateBackground(triangle* myTriangles)
 
 		sqOffsetY -= 0.1f;
 	}
+
+
+}
+
+void DEMO_APP::DxSwapChainConfig(DXGI_SWAP_CHAIN_DESC &swapChainDesc)
+{
+	ZeroMemory(&dxSwapChainDesc, sizeof(dxSwapChainDesc));
+	dxSwapChainDesc.BufferCount = 1;
+	dxSwapChainDesc.BufferDesc.Width = BACKBUFFER_WIDTH;
+	dxSwapChainDesc.BufferDesc.Height = BACKBUFFER_HEIGHT;
+	dxSwapChainDesc.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	dxSwapChainDesc.BufferDesc.RefreshRate.Numerator = 0;
+	dxSwapChainDesc.BufferDesc.RefreshRate.Denominator = 1;
+	dxSwapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+	dxSwapChainDesc.OutputWindow = window;
+	dxSwapChainDesc.SampleDesc.Count = 1;
+	dxSwapChainDesc.SampleDesc.Quality = 0;
+	dxSwapChainDesc.Windowed = true;
+	dxSwapChainDesc.BufferDesc.ScanlineOrdering = DXGI_MODE_SCANLINE_ORDER_UNSPECIFIED;
+	dxSwapChainDesc.BufferDesc.Scaling = DXGI_MODE_SCALING_UNSPECIFIED;
+	dxSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	dxSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
+
 }
