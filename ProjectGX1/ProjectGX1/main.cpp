@@ -114,6 +114,8 @@ public:
 
 	//Helper methods
 	void DxSwapChainConfig(DXGI_SWAP_CHAIN_DESC &swapChainDesc);
+	void InitializeBuffer(D3D11_BUFFER_DESC &buffer, unsigned int numVerts, unsigned int structSize);
+
 };
 
 //************************************************************
@@ -185,14 +187,9 @@ DEMO_APP::DEMO_APP(HINSTANCE hinst, WNDPROC proc)
 			circleVerts[i].point.x *= 0.2f;
 			circleVerts[i].point.y *= 0.2f;
 		}
-
 		D3D11_BUFFER_DESC cBuffer;
-		cBuffer.Usage = D3D11_USAGE_IMMUTABLE;
-		cBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		cBuffer.CPUAccessFlags = NULL;
-		cBuffer.ByteWidth = sizeof(SIMPLE_VERTEX)*dxNumVerts;
-		cBuffer.StructureByteStride = sizeof(SIMPLE_VERTEX);
-		cBuffer.MiscFlags = NULL;
+		InitializeBuffer(cBuffer, dxNumVerts, sizeof(SIMPLE_VERTEX));
+
 
 		D3D11_SUBRESOURCE_DATA srData = { 0 };
 		srData.pSysMem = circleVerts;
@@ -200,12 +197,7 @@ DEMO_APP::DEMO_APP(HINSTANCE hinst, WNDPROC proc)
 		d3Device->CreateBuffer(&cBuffer, &srData, &d3Buffer);
 		
 		D3D11_BUFFER_DESC tBuffer;
-		tBuffer.Usage = D3D11_USAGE_IMMUTABLE;
-		tBuffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-		tBuffer.CPUAccessFlags = NULL;
-		tBuffer.ByteWidth = sizeof(triangle)*dxNumTriangles;
-		tBuffer.StructureByteStride = sizeof(triangle);
-		tBuffer.MiscFlags = NULL; 
+		InitializeBuffer(tBuffer, dxNumTriangles, sizeof(triangle));
 		
 		triangle triangleVerts[400];
 		GenerateBackground(triangleVerts);
@@ -469,4 +461,14 @@ void DEMO_APP::DxSwapChainConfig(DXGI_SWAP_CHAIN_DESC &swapChainDesc)
 	dxSwapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	dxSwapChainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
 
+}
+
+void DEMO_APP::InitializeBuffer(D3D11_BUFFER_DESC &buffer, unsigned int numVerts, unsigned int structSize)
+{
+	buffer.Usage = D3D11_USAGE_IMMUTABLE;
+	buffer.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	buffer.CPUAccessFlags = NULL;
+	buffer.ByteWidth = structSize *numVerts;
+	buffer.StructureByteStride = structSize;
+	buffer.MiscFlags = NULL;
 }
